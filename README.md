@@ -55,6 +55,24 @@ The first launch downloads the engine image (if `setup.sh` didn't already)
 and can take a few minutes — the app shows a status message while this
 happens. Subsequent launches are fast since the container is reused.
 
+## AirPlay
+
+Click the AirPlay icon next to **Play** to send the stream to an Apple
+TV/AirPlay receiver on your network. This requires:
+
+- The engine container is started with `ALLOW_REMOTE_ACCESS=yes` (the app
+  does this automatically). If you previously ran the container without it,
+  remove it once with `docker rm -f acestream-engine` and relaunch the app
+  to recreate it.
+- The playback URL uses your Mac's LAN IP (not `127.0.0.1`), since the
+  AirPlay receiver fetches the stream itself over the network — handled
+  automatically by `LocalNetwork.swift`.
+- macOS may prompt for **Local Network** permission the first time
+  (System Settings > Privacy & Security > Local Network) — allow it for
+  AceStreamPlayer.
+- Your Mac and the AirPlay receiver must be on the same network, and the
+  receiver must be able to reach your Mac's IP on port 6878.
+
 ## Usage
 
 Paste an `acestream://<40-char-hex-id>` link (or just the bare hex ID) into

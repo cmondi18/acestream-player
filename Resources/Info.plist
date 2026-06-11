@@ -26,6 +26,10 @@
     <dict>
         <key>NSAllowsLocalNetworking</key>
         <true/>
+        <key>NSAllowsArbitraryLoads</key>
+        <true/>
     </dict>
+    <key>NSLocalNetworkUsageDescription</key>
+    <string>Used to reach the local Ace Stream engine and to send video to AirPlay devices on your network.</string>
 </dict>
 </plist>

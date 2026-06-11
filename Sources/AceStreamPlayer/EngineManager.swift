@@ -72,12 +72,17 @@ final class EngineManager: ObservableObject {
             status = .error("That doesn't look like a valid acestream:// link or content ID.")
             return
         }
-        guard let url = AceStreamLink.manifestURL(forContentID: id, engineBaseURL: baseURL) else {
+        // Use the LAN IP (not 127.0.0.1) so AirPlay receivers, which fetch
+        // the stream URL themselves, can reach the local engine.
+        let host = LocalNetwork.primaryIPv4Address() ?? "127.0.0.1"
+        guard let lanBaseURL = URL(string: "http://\(host):6878"),
+              let url = AceStreamLink.manifestURL(forContentID: id, engineBaseURL: lanBaseURL) else {
             return
         }
 
         player?.pause()
         let newPlayer = AVPlayer(url: url)
+        newPlayer.allowsExternalPlayback = true
         player = newPlayer
         newPlayer.play()
         status = .ready
@@ -108,7 +113,7 @@ final class EngineManager: ObservableObject {
         if try await containerExists() {
             _ = try await runDocker(["start", containerName])
         } else {
-            _ = try await runDocker(["run", "-d", "--platform", "linux/amd64", "--name", containerName, "-p", "6878:6878", image])
+            _ = try await runDocker(["run", "-d", "--platform", "linux/amd64", "--name", containerName, "-e", "ALLOW_REMOTE_ACCESS=yes", "-p", "6878:6878", image])
         }
     }
 
