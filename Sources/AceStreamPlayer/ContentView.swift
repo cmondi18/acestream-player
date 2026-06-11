@@ -52,6 +52,11 @@ struct ContentView: View {
             Button("Play", action: play)
                 .keyboardShortcut(.defaultAction)
                 .disabled(!engine.status.isReady)
+
+            if let player = engine.player {
+                AirPlayButton(player: player)
+                    .frame(width: 28, height: 28)
+            }
         }
         .padding(12)
     }
